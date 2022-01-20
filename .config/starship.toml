@@ -1,7 +1,49 @@
 # ~/.config/starship.toml
 
-add_newline = false
+# Use custom format
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$line_break\
+$character
+"""
 
-[line_break]
-disabled = true
+[username]
+format = "[$user]($style)"
+style_user = "bold green"
+show_always = true
 
+[hostname]
+format = "[@$hostname]($style) "
+style = "green"
+ssh_only = false
+
+[directory]
+truncation_length = 2
+truncate_to_repo = false
+truncation_symbol = "../"
+style = "gray"
+
+[character]
+success_symbol = "[\\$](white)"
+error_symbol = "[\\$](red)"
+
+[git_branch]
+format = "[\\($branch\\)]($style) "
+style = "blue bold"
+only_attached = true
+
+[git_commit]
+format = "[\\($hash$tag\\)]($style) "
+style = "blue bold"
+tag_disabled = false
+only_detached = true
+
+[git_status]
+# modified = "M"
+style = "red bold"
