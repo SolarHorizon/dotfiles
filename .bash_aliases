@@ -1,5 +1,5 @@
 # Config repo
-alias config='/usr/bin/git --git-dir=/home/matt/.cfg/ --work-tree=/home/matt'
+alias cfg='/usr/bin/git --git-dir=/home/matt/.cfg/ --work-tree=/home/matt'
 
 # Neovim
 alias vi='nvim'
