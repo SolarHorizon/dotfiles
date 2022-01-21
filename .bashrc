@@ -2,6 +2,9 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Default editor
+export EDITOR="nvim"
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -153,6 +156,19 @@ elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
 fi
 
 unset env
+
+# have to rely on the vscode plugin until they tell us how to actually build it ourselves
+export ROBLOX_LSP_VERSION="1.5.5"
+ROBLOX_LSP=$HOME/.vscode-server/extensions/nightrains.robloxlsp-$ROBLOX_LSP_VERSION/server
+
+roblox_lsp() {
+    $ROBLOX_LSP/bin/Linux/lua-language-server -E $ROBLOX_LSP/main.lua
+}
+
+# Editor stuff
+alias src=". ~/.bashrc"
+alias edit="$EDITOR"
+alias be="edit ~/.bashrc; src;"
 
 export PATH=$HOME/bin:$HOME/.foreman/bin:$HOME/.cargo/bin:$PATH
 

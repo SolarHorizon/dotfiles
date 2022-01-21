@@ -3,7 +3,7 @@
 # Use custom format
 format = """
 $username\
-$hostname\
+$hostname \
 $directory\
 $git_branch\
 $git_commit\
@@ -19,7 +19,7 @@ style_user = "bold green"
 show_always = true
 
 [hostname]
-format = "[@$hostname]($style) "
+format = "[@$hostname]($style)"
 style = "green"
 ssh_only = false
 
@@ -27,7 +27,7 @@ ssh_only = false
 truncation_length = 2
 truncate_to_repo = false
 truncation_symbol = "../"
-style = "gray"
+style = "fg:#5f636e"
 
 [character]
 success_symbol = "[\\$](white)"
