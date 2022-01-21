@@ -114,7 +114,7 @@ function build() {
 }
 
 # WSL
-if grep -qi Microsoft /proc/version; then
+if grep -qi Microsoft /proc/version > /dev/null 2>&1; then
   export IS_WSL='true'
 
   fix_wsl2_interop() {
@@ -154,4 +154,5 @@ fi
 
 unset env
 
-export PATH=/home/matt/.foreman/bin:/home/matt/.cargo/bin:$PATH
+export PATH=$HOME/bin:$HOME/.foreman/bin:$HOME/.cargo/bin:$PATH
+
