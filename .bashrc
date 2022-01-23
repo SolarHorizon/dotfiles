@@ -2,13 +2,10 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# Default editor
-export EDITOR="nvim"
-
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+	*i*) ;;
+		*) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -35,12 +32,12 @@ shopt -s checkwinsize
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+	debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+	xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -49,42 +46,42 @@ esac
 #force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
 	# We have color support; assume it's compliant with Ecma-48
 	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
 	# a case would tend to support setf rather than setaf.)
 	color_prompt=yes
-    else
+	else
 	color_prompt=
-    fi
+	fi
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+	PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
+	PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+	;;
 *)
-    ;;
+	;;
 esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+	if test -r ~/.dircolors; then eval "$(dircolors -b ~/.dircolors)"; else eval "$(dircolors -b)"; fi
+	alias ls='ls --color=auto'
+	#alias dir='dir --color=auto'
+	#alias vdir='vdir --color=auto'
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+	alias grep='grep --color=auto'
+	alias fgrep='fgrep --color=auto'
+	alias egrep='egrep --color=auto'
 fi
 
 # colored GCC warnings and errors
@@ -105,70 +102,107 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+	. ~/.bash_aliases
 fi
-
-eval "$(starship init bash)"
-
-function build() {
-  rojo --version
-  mkdir -p build
-  rojo build -o "build/${1:-default}.rbxl"
-}
 
 # WSL
 if grep -qi Microsoft /proc/version > /dev/null 2>&1; then
-  export IS_WSL='true'
-
-  fix_wsl2_interop() {
-      for i in $(pstree -np -s $$ | grep -o -E '[0-9]+'); do
-          if [[ -e "/run/WSL/${i}_interop" ]]; then
-              export WSL_INTEROP=/run/WSL/${i}_interop
-          fi
-      done
-  }
-  fix_wsl2_interop
-
-  alias fix='fix_wsl2_interop'
-  alias start='powershell.exe /c start "$*"'
-  alias explore='explorer.exe'
+	. ~/.bash_wsl
 fi
 
 # SSH
-env=~/.ssh/agent.env
+env="$HOME/.ssh/agent.env"
 
 agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
 
 agent_start () {
-    (umask 077; ssh-agent >| "$env")
-    . "$env" >| /dev/null ; }
+	(umask 077; ssh-agent >| "$env")
+	. "$env" >| /dev/null ; }
 
 agent_load_env
 
 # agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2= agent not running
 agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
 
-if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
-    agent_start
-    ssh-add
-elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
-    ssh-add
+if [ ! "$SSH_AUTH_SOCK" ] || [ "$agent_run_state" = 2 ]; then
+	agent_start
+	ssh-add
+elif [ "$SSH_AUTH_SOCK" ] && [ "$agent_run_state" = 1 ]; then
+	ssh-add
 fi
 
 unset env
 
+# starship prompt
+eval "$(starship init bash)"
+
 # have to rely on the vscode plugin until they tell us how to actually build it ourselves
-export ROBLOX_LSP_VERSION="1.5.5"
-ROBLOX_LSP=$HOME/.vscode-server/extensions/nightrains.robloxlsp-$ROBLOX_LSP_VERSION/server
+robloxLspLocation="$HOME/.vscode-server/extensions/nightrains.robloxlsp-${ROBLOX_LSP_VERSION}"
 
 roblox_lsp() {
-    $ROBLOX_LSP/bin/Linux/lua-language-server -E $ROBLOX_LSP/main.lua
+	"$robloxLspLocation/server/bin/Linux/lua-language-server" -E "$robloxLspLocation/server/main.lua"
 }
 
-# Editor stuff
-alias src=". ~/.bashrc"
-alias edit="$EDITOR"
-alias be="edit ~/.bashrc; src;"
+# projectrc
+# Automatically finds a .projectrc file in the working directory & asks to source it
+
+declare -A PROJRC_TRUSTED
+prc_trusted_path="$HOME/.projectrc_trusted_sources"
+touch "${prc_trusted_path}"
+
+readarray -t lines < "${prc_trusted_path}"
+for line in "${lines[@]}"; do
+	key="${line%%=*}"
+	value="${line#*=}"
+	PROJRC_TRUSTED[$key]=$value
+done
+
+__projrc_is_trusted() {
+	[[ "$1" ]] && echo "${PROJRC_TRUSTED[$1]}"
+}
+
+__projrc_remove_dir() {
+	unset 'PROJRC_TRUSTED[$1]'
+	sed -i "\%^$1%d" "${prc_trusted_path}";
+}
+
+__projrc_add_dir() {
+	__projrc_remove_dir "$1"
+	PROJRC_TRUSTED["$1"]+="$2"
+	echo "$1=$2" >> "${prc_trusted_path}"
+}
+
+prc_allow() { __projrc_add_dir "${1:-${PWD}}" "true"; }
+prc_deny() { __projrc_add_dir "${1:-${PWD}}" "false"; }
+prc_remove() { __projrc_remove_dir "${1:-${PWD}}"; }
+
+__projrc_prompt() {
+	printf "\033[0;33m\nA .projectrc file was detected in this directory. Running resource files can be dangerous.\n\033[1;33mIf you do not trust the author, DO NOT source this file!\n\n\033[0m"
+	read -rp $'Source .projectrc file? (\033[1;32mY\033[0mes/\033[1;31mN\033[0mo/\033[1;32mA\033[0mlways/ne\033[1;31mV\033[0mer): ' yn
+	case "${yn}" in
+		[YyAa]*) . .projectrc ;&
+		[Aa]*) prc_allow ;;
+		[Vv]*) prc_deny && echo -e "\n\033[0;33mThis directory is now marked as untrusted.\033[0m" ;;
+		[Nn]*) echo -e "\n\033[0;33mAborted.\033[0m" ;;
+	esac
+}
+
+projectrc() {
+	[[ $(type -t cleanup_projectrc) == "function" ]] && cleanup_projectrc
+	if [[ -f ".projectrc" ]]; then
+		trusted=$(__projrc_is_trusted "${PWD}")
+		case "${trusted}" in
+			true) . .projectrc ;;
+			false) echo -e "\n\033[0;33mThis directory was marked as untrusted.\033[0m" ;;
+			* ) __projrc_prompt ;;
+		esac
+	fi
+}
+
+cd() {
+	builtin cd "$@" || return
+	projectrc
+}
+cd .
 
 export PATH=$HOME/bin:$HOME/.foreman/bin:$HOME/.cargo/bin:$PATH
-

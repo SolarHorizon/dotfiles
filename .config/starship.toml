@@ -7,8 +7,8 @@ $hostname \
 $directory\
 $git_branch\
 $git_commit\
-$git_state\
 $git_status\
+$git_state\
 $line_break\
 $character
 """
@@ -45,5 +45,5 @@ tag_disabled = false
 only_detached = true
 
 [git_status]
-# modified = "M"
 style = "red bold"
+

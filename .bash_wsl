@@ -1,0 +1,19 @@
+#!/bin/bash
+
+fix_wsl2_interop() {
+	for i in $(pstree -np -s $$ | grep -o -E '[0-9]+'); do
+		if [[ -e "/run/WSL/${i}_interop" ]]; then
+			export WSL_INTEROP=/run/WSL/${i}_interop
+		fi
+	done
+}
+fix_wsl2_interop
+
+notify-send() { 
+	wsl-notify-send.exe --category "$WSL_DISTRO_NAME" "${@}"
+}
+
+alias start='pwsh.exe /c start'
+alias explore='explorer.exe'
+alias wsl='wsl.exe'
+alias wslfix='fix_wsl2_interop'
