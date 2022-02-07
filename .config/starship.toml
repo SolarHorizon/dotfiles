@@ -2,8 +2,8 @@
 
 # Use custom format
 format = """
-$username\
-$hostname \
+$username\b\
+$hostname\
 $directory\
 $git_branch\
 $git_commit\
@@ -14,13 +14,13 @@ $character
 """
 
 [username]
-format = "[$user]($style)"
-style_user = "bold green"
+format = "[$user]($style) "
+style_user = "fg:#12a0ff"
 show_always = true
 
 [hostname]
-format = "[@$hostname]($style)"
-style = "green"
+format = "[@$hostname]($style) "
+style = "fg:#12a0ff"
 ssh_only = false
 
 [directory]
@@ -30,20 +30,19 @@ truncation_symbol = "../"
 style = "fg:#5f636e"
 
 [character]
-success_symbol = "[\\$](white)"
-error_symbol = "[\\$](red)"
+success_symbol = "[λ](white)"
+error_symbol = "[λ](white)"
 
 [git_branch]
 format = "[\\($branch\\)]($style) "
-style = "blue bold"
+style = "purple"
 only_attached = true
 
 [git_commit]
 format = "[\\($hash$tag\\)]($style) "
-style = "blue bold"
+style = "purple"
 tag_disabled = false
 only_detached = true
 
 [git_status]
-style = "red bold"
-
+style = "red"
