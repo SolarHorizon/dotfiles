@@ -1,0 +1,6 @@
+gh release download -R roblox/luau -p *ubuntu.zip
+unzip luau-ubuntu.zip -d ~/bin
+# make this better
+chmod +x ~/bin/luau && chmod +x ~/bin/luau-analyze
+rm luau-ubuntu.zip
+
