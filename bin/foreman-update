@@ -1,0 +1,5 @@
+gh release download -R roblox/foreman -p *linux.zip
+unzip foreman*.zip -d ~/bin
+chmod +x ~/bin/foreman*
+rm foreman*.zip
+
