@@ -1,0 +1,5 @@
+ROBLOX_LSP_PATH="${HOME}/tools/robloxlsp"
+
+"${ROBLOX_LSP_PATH}/bin/Linux/lua-language-server" \
+-E \
+"${ROBLOX_LSP_PATH}/main.lua"
