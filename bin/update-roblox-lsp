@@ -1,0 +1,7 @@
+curl -o ~/tools/robloxlsp.zip https://nightrains.gallery.vsassets.io/_apis/public/gallery/publisher/nightrains/extension/robloxlsp/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
+busybox unzip -d ~/tools/robloxlsp_temp ~/tools/robloxlsp.zip
+rm -r ~/tools/robloxlsp
+mv ~/tools/robloxlsp_temp/extension/server ~/tools/robloxlsp
+chmod +777 ~/tools/robloxlsp/bin/Linux/lua-language-server
+rm -r ~/tools/robloxlsp_temp
+rm ~/tools/robloxlsp.zip

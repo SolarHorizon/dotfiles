@@ -136,13 +136,6 @@ unset env
 # starship prompt
 eval "$(starship init bash)"
 
-# have to rely on the vscode plugin until they tell us how to actually build it ourselves
-robloxLspLocation="$HOME/.vscode-server/extensions/nightrains.robloxlsp-${ROBLOX_LSP_VERSION}"
-
-roblox_lsp() {
-	"$robloxLspLocation/server/bin/Linux/lua-language-server" -E "$robloxLspLocation/server/main.lua"
-}
-
 # projectrc
 # Automatically finds a .projectrc file in the working directory & asks to source it
 
@@ -205,4 +198,7 @@ cd() {
 }
 cd .
 
+export EDITOR='nvim'
 export PATH=$HOME/bin:$HOME/.foreman/bin:$HOME/.cargo/bin:$PATH
+. "$HOME/.cargo/env"
+
