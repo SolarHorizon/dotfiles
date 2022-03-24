@@ -1,5 +1,6 @@
 local lsp = require("lspconfig")
 local configs = require("lspconfig.configs")
+local null_ls = require("null-ls")
 local treesitter = require("nvim-treesitter.configs")
 
 if not configs.roblox_lsp then
@@ -13,28 +14,47 @@ if not configs.roblox_lsp then
 			settings = {
 				robloxLsp = {
 					telemetry = {
-						enable = false
-					}
-				}
-			}
+						enable = false,
+					},
+				},
+			},
 		},
 		docs = {
 			package_json = "https://raw.githubusercontent.com/NightrainsRbx/RobloxLsp/master/package.json",
 			description = "https://github.com/nightrainsrbx/robloxlsp",
-		}
+		},
 	}
 end
 
 lsp.roblox_lsp.setup({
-	robloxLsp = {
-		endAutoCompletion = true,
-		searchDepth = 2,
-	}
+	settings = {
+		robloxLsp = {
+			diagnostics = {
+				enable = false,
+			},
+		},
+	},
+})
+
+null_ls.setup({
+	sources = {
+		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.diagnostics.selene,
+	},
+	on_attach = function(client)
+		if client.resolved_capabilities.document_formatting then
+			vim.cmd([[
+			augroup LspFormatting
+				autocmd! * <buffer>
+				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+			augroup END
+			]])
+		end
+	end,
 })
 
 treesitter.setup({
 	highlight = {
 		enable = true,
-	}
+	},
 })
-

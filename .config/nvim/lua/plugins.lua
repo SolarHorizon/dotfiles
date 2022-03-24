@@ -9,19 +9,11 @@ return require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
 
 	use("neovim/nvim-lspconfig")
-	use("mfussenegger/nvim-lint")
-	use("ckipp01/stylua-nvim")
 	use("nvim-lua/plenary.nvim")
 	use("nvim-telescope/telescope.nvim")
-	use{"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
-	use("nvim-treesitter/playground")
+	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+	use({ "nvim-treesitter/playground", requires = "nvim-treesitter/nvim-treesitter" })
+	use({ "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
 
 	use("joshdick/onedark.vim")
-	use{
-		"glepnir/galaxyline.nvim",
-		requires = { "kyazdani42/nvim-web-devicons" },
-		-- config = function() 
-		-- end
-	}
 end)
-
