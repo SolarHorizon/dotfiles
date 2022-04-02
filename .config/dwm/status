@@ -1,0 +1,30 @@
+#!/bin/bash
+sep=' | '
+
+network() {
+	ssid="$(nmcli -t -f NAME c show --active)"
+	if [[ ! "${ssid}" == '' ]]; then
+		echo "直  ${ssid}"
+	else
+		echo "睊  disconnected"
+	fi
+}
+
+battery() {
+	echo " $(cat /sys/class/power_supply/BAT0/capacity)%"
+}
+
+ftime() {
+	date +"%I:%M:%S %p"
+}
+
+fdate() {
+	date "+%a, %B %-d"
+}
+
+volume() {
+	echo "  $(pamixer --get-volume-human)"
+}
+
+xsetroot -name " $(battery)${sep}$(volume)${sep}$(network)${sep}$(ftime)${sep}$(fdate) "
+
