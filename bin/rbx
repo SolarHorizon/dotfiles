@@ -1,0 +1,154 @@
+#!/bin/bash
+
+RBX_USAGE="Access frequently used Roblox dev programs & commands
+
+USAGE:
+    rbx [subcommand]
+
+COMMANDS:
+	build		Build the current project to 'build/project_name.rbxl'
+	run 		Executes the build command and then opens the file in Roblox Studio
+	studio		Opens a file in Roblox Studio
+	auth		Prints the .ROBLOSECURITY token of the last user to log into Roblox Studio
+	tarmac		Wraps Tarmac commands with better defaults
+	import		Runs the script located at remodel/import.sh (TEMPORARY)
+	refresh		Runs the script located at remodel/refresh.sh (TEMPORARY)"
+
+BUILD_USAGE="Build the current project to 'build/project_name.rbxl'
+
+USAGE:
+	rbx build [project_name]"
+
+RUN_USAGE="Executes the build command and then opens the file in Roblox Studio
+
+USAGE:
+	rbx run [project_name]"
+
+TARMAC_USAGE="Access tarmac
+
+USAGE:
+	tarmac [subcommand]
+
+COMMANDS:
+	sync"
+
+platform=''
+
+sys="$(uname -sr)"
+case "${sys}" in
+	Linux*microsoft)
+		platform="wsl"
+		;;
+	Linux*)
+		platform="linux"
+		;;
+	CYGWIN*|MINGW*|MSYS*)
+		platform="windows"
+		;;
+	Darwin*)
+		platform="mac"
+		;;
+	*)
+		platform="unknown"
+		;;
+esac
+
+roblosecurity() {
+	token=''
+	case "${platform}" in
+		windows|wsl)
+			reg_cmd='reg'
+			if [[ -x "$(comand -v reg.exe)" ]]; then
+				reg_cmd='reg.exe'
+			fi
+			token="$(${reg_cmd} query 'HKCU\SOFTWARE\Roblox\RobloxStudioBrowser\roblox.com' -v .ROBLOSECURITY)"
+			;;
+		linux)
+			token="$(awk -F: '/^".ROBLOSECURITY"=/{print}' "${HOME}"/.local/share/grapejuice/prefixes/studio/user.reg)"
+			;;
+	esac
+	token="${token#*COOK::<}"
+	echo "${token%>*}"
+}
+
+open_place() {
+	case "${platform}" in
+		windows|wsl)
+			start_cmd='start'
+			if [[ -x "$(command -v start.exe)" ]]; then
+				start_cmd='start.exe'
+			fi
+			"${start_cmd}" "${1}"
+			;;
+		linux)
+			env LOG_LEVEL="WARNING" grapejuice studio "${PWD}/${1}"
+			;;
+		mac)
+			open "${1}"
+			;;
+	esac
+}
+
+build() {
+	rojo --version
+	mkdir -p build
+	rojo build "${1:-default}.project.json" -o "build/${1:-default}.rbxl"
+}
+
+run() {
+	build "${1}"
+	open_place "build/${1:-default}.rbxl"
+}
+
+tarmac_sync() {
+	tarmac sync --target roblox --auth "$(roblosecurity)" --retry 3 --retry-delay 5
+}
+
+case "${1}" in
+	build)
+		case "${2}" in
+			--help)
+				echo "${BUILD_USAGE}"
+				;;
+			*)
+				build "${@:2}"
+				;;
+		esac
+		;;
+	run)
+		case "${2}" in
+			--help)
+				echo "${RUN_USAGE}"
+				;;
+			*)
+				run "${@:2}"
+				;;
+		esac
+		;;
+	studio)
+		open_place "${@:2}"
+		;;
+	roblosecurity|auth)
+		roblosecurity
+		;;
+	tarmac)
+		case "${2}" in
+			sync)
+				tarmac_sync
+				;;
+			*)
+				echo "${TARMAC_USAGE}"
+				;;
+		esac
+		;;
+	import)
+		env REMODEL_AUTH="$(roblosecurity)" remodel/import.sh "${@:2}"
+		;;
+	refresh)
+		env REMODEL_AUTH="$(roblosecurity)" remodel/refresh.sh "${@:2}"
+		;;
+	*)
+		echo "${RBX_USAGE}"
+		;;
+esac
+

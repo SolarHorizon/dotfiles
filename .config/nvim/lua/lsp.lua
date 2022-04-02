@@ -38,8 +38,12 @@ lsp.roblox_lsp.setup({
 
 null_ls.setup({
 	sources = {
+		-- lua
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.diagnostics.selene,
+
+		-- sh
+		null_ls.builtins.diagnostics.shellcheck,
 	},
 	on_attach = function(client)
 		if client.resolved_capabilities.document_formatting then
