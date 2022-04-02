@@ -9,7 +9,6 @@ COMMANDS:
 	build		Build the current project to 'build/project_name.rbxl'
 	run 		Executes the build command and then opens the file in Roblox Studio
 	studio		Opens a file in Roblox Studio
-	auth		Prints the .ROBLOSECURITY token of the last user to log into Roblox Studio
 	tarmac		Wraps Tarmac commands with better defaults
 	import		Runs the script located at remodel/import.sh (TEMPORARY)
 	refresh		Runs the script located at remodel/refresh.sh (TEMPORARY)"
@@ -127,9 +126,6 @@ case "${1}" in
 		;;
 	studio)
 		open_place "${@:2}"
-		;;
-	roblosecurity|auth)
-		roblosecurity
 		;;
 	tarmac)
 		case "${2}" in
