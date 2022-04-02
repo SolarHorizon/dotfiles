@@ -6,24 +6,37 @@ USAGE:
     rbx [subcommand]
 
 COMMANDS:
-	build		Build the current project to 'build/project_name.rbxl'
-	run 		Executes the build command and then opens the file in Roblox Studio
+	build		Build the rojo project 
+	run 		Builds the project and opens the file in Roblox Studio
 	studio		Opens a file in Roblox Studio
 	tarmac		Wraps Tarmac commands with better defaults
 	import		Runs the script located at remodel/import.sh (TEMPORARY)
-	refresh		Runs the script located at remodel/refresh.sh (TEMPORARY)"
+	refresh		Runs the script located at remodel/refresh.sh (TEMPORARY)
+	test		Executes the build command and then runs 'run-tests.lua' in Roblox Studio"
 
-BUILD_USAGE="Build the current project to 'build/project_name.rbxl'
-
-USAGE:
-	rbx build [project_name]"
-
-RUN_USAGE="Executes the build command and then opens the file in Roblox Studio
+BUILD_USAGE="Build the Rojo project
 
 USAGE:
-	rbx run [project_name]"
+	rbx build [project_name] [file_name]
 
-TARMAC_USAGE="Access tarmac
+ARGS:
+	[project_name]
+		Name of the project to build. Defaults to 'default'
+	[file_name]
+		Name of the file to be written to. Defaults to the value of project_name"
+
+RUN_USAGE="Builds the project and opens the file in Roblox Studio.
+
+USAGE:
+	rbx run [project_name]
+
+ARGS:
+	[project_name]
+		Name of the project to run. Defaults to 'default'
+	[file_name]
+		Name of the file to be written to. Defaults to the value of project_name"
+
+TARMAC_USAGE="Wraps Tarmac commands with better defaults
 
 USAGE:
 	tarmac [subcommand]
@@ -57,7 +70,7 @@ roblosecurity() {
 	case "${platform}" in
 		windows|wsl)
 			reg_cmd='reg'
-			if [[ -x "$(comand -v reg.exe)" ]]; then
+			if [[ -x "$(command -v reg.exe)" ]]; then
 				reg_cmd='reg.exe'
 			fi
 			token="$(${reg_cmd} query 'HKCU\SOFTWARE\Roblox\RobloxStudioBrowser\roblox.com' -v .ROBLOSECURITY)"
@@ -91,12 +104,34 @@ open_place() {
 build() {
 	rojo --version
 	mkdir -p build
-	rojo build "${1:-default}.project.json" -o "build/${1:-default}.rbxl"
+	rojo build "${1:-default}.project.json" -o "build/${2:-${1:-default}}.rbxl"
 }
 
 run() {
-	build "${1}"
-	open_place "build/${1:-default}.rbxl"
+	build "${@}"
+	open_place "build/${2:-${1:-default}}.rbxl"
+}
+
+test() {
+	rir=''
+	case "${platform}" in
+		windows|wsl)
+			rir='run-in-roblox'
+			if [[ -x "$(command -v run-in-roblox.exe)" ]]; then
+				rir='run-in-roblox.exe'
+			fi
+			;;
+		linux)
+			;;
+	esac
+
+	if [[ "${rir}" ]]; then
+		build "${1}" "${1:-default}-test"
+		"${rir}" --version
+		"${rir}" --place "build/${1:-default}.rbxl" --script "run-tests.lua"
+	else
+		echo "A run-in-roblox installation was not found on this system"
+	fi
 }
 
 tarmac_sync() {
@@ -123,6 +158,9 @@ case "${1}" in
 				run "${@:2}"
 				;;
 		esac
+		;;
+	test)
+		test "${2}"
 		;;
 	studio)
 		open_place "${@:2}"
