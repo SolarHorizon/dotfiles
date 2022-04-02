@@ -9,10 +9,11 @@ COMMANDS:
 	build		Build the rojo project 
 	run 		Builds the project and opens the file in Roblox Studio
 	studio		Opens a file in Roblox Studio
-	tarmac		Wraps Tarmac commands with better defaults
+	tarmac		Wraps a few Tarmac commands with some defaults
 	import		Runs the script located at remodel/import.sh (TEMPORARY)
 	refresh		Runs the script located at remodel/refresh.sh (TEMPORARY)
-	test		Executes the build command and then runs 'run-tests.lua' in Roblox Studio"
+	test		Executes the build command and then runs 'run-tests.lua' in Roblox Studio
+	img-sync	Alias for 'rbx tarmac sync'"
 
 BUILD_USAGE="Build the Rojo project
 
@@ -36,19 +37,19 @@ ARGS:
 	[file_name]
 		Name of the file to be written to. Defaults to the value of project_name"
 
-TARMAC_USAGE="Wraps Tarmac commands with better defaults
+TARMAC_USAGE="Wraps a few Tarmac commands with some defaults
 
 USAGE:
 	tarmac [subcommand]
 
 COMMANDS:
-	sync"
+	sync	Runs tarmac sync with 3 retries, a retry delay of 5 seconds, and your auth cookie"
 
 platform=''
 
 sys="$(uname -sr)"
 case "${sys}" in
-	Linux*microsoft)
+	Linux*microsoft*)
 		platform="wsl"
 		;;
 	Linux*)
@@ -67,20 +68,35 @@ esac
 
 roblosecurity() {
 	token=''
-	case "${platform}" in
-		windows|wsl)
-			reg_cmd='reg'
-			if [[ -x "$(command -v reg.exe)" ]]; then
-				reg_cmd='reg.exe'
-			fi
-			token="$(${reg_cmd} query 'HKCU\SOFTWARE\Roblox\RobloxStudioBrowser\roblox.com' -v .ROBLOSECURITY)"
-			;;
-		linux)
-			token="$(awk -F: '/^".ROBLOSECURITY"=/{print}' "${HOME}"/.local/share/grapejuice/prefixes/studio/user.reg)"
-			;;
-	esac
-	token="${token#*COOK::<}"
-	echo "${token%>*}"
+
+	if [[ -f ".env" ]]; then
+		token="$(awk -F: /^ROBLOSECURITY=/{print} ".env")"
+		token="${token#*ROBLOSECURITY=\"}"
+		token="${token%\"}"
+	fi
+
+	if [[ ! "${token}" ]]; then
+		case "${platform}" in
+			windows|wsl)
+				reg_cmd='reg'
+				if [[ -x "$(command -v reg.exe)" ]]; then
+					reg_cmd='reg.exe'
+				fi
+				token="$(${reg_cmd} query 'HKCU\SOFTWARE\Roblox\RobloxStudioBrowser\roblox.com' -v .ROBLOSECURITY)"
+				;;
+			linux)
+				reg_path="${HOME}/.local/share/grapejuice/prefixes/studio/user.reg"
+				if [[ -f "${reg_path}" ]]; then
+					token="$(awk -F: '/^".ROBLOSECURITY"=/{print}' "${reg_path}")"
+				fi
+				;;
+		esac
+
+		token="${token#*COOK::<}"
+		token="${token%>*}"
+	fi
+
+	echo "${token}"
 }
 
 open_place() {
@@ -102,8 +118,8 @@ open_place() {
 }
 
 build() {
-	rojo --version
 	mkdir -p build
+	rojo --version
 	rojo build "${1:-default}.project.json" -o "build/${2:-${1:-default}}.rbxl"
 }
 
@@ -112,7 +128,7 @@ run() {
 	open_place "build/${2:-${1:-default}}.rbxl"
 }
 
-test() {
+run_tests() {
 	rir=''
 	case "${platform}" in
 		windows|wsl)
@@ -126,9 +142,8 @@ test() {
 	esac
 
 	if [[ "${rir}" ]]; then
-		build "${1}" "${1:-default}-test"
-		"${rir}" --version
-		"${rir}" --place "build/${1:-default}.rbxl" --script "run-tests.lua"
+		build "${1}" "${1:-default}-test" 1> /dev/null
+		"${rir}" --place "build/${1:-default}-test.rbxl" --script "run-tests.lua"
 	else
 		echo "A run-in-roblox installation was not found on this system"
 	fi
@@ -160,7 +175,7 @@ case "${1}" in
 		esac
 		;;
 	test)
-		test "${2}"
+		run_tests "${2}"
 		;;
 	studio)
 		open_place "${@:2}"
@@ -171,7 +186,7 @@ case "${1}" in
 				tarmac_sync
 				;;
 			*)
-				echo "${TARMAC_USAGE}"
+				tarmac "${@:2}"
 				;;
 		esac
 		;;
@@ -180,6 +195,9 @@ case "${1}" in
 		;;
 	refresh)
 		env REMODEL_AUTH="$(roblosecurity)" remodel/refresh.sh "${@:2}"
+		;;
+	img-sync)
+		tarmac_sync
 		;;
 	*)
 		echo "${RBX_USAGE}"
