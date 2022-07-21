@@ -137,25 +137,35 @@ run() {
 	open_place "build/${2:-${1:-default}}.rbxl"
 }
 
-run_tests() {
-	rir=''
+run_in_roblox() {
+	success=''
+	rir='run-in-roblox.exe'
+
 	case "${platform}" in
 		windows|wsl)
-			rir='run-in-roblox'
-			if [[ -x "$(command -v run-in-roblox.exe)" ]]; then
-				rir='run-in-roblox.exe'
+			if [[ -x "$(command -v run-in-roblox)" ]]; then
+				rir='run-in-roblox'
 			fi
+
+			"${rir}" --place "${1}" --script "${2}" && success='true'
 			;;
 		linux)
+			if [[ -x "$(command -v wine)" ]]; then
+				WINEPREFIX="${HOME}/.local/share/grapejuice/prefixes/studio" \
+					wine "${HOME}/tools/run-in-roblox.exe" --place "${1}" --script "${2}" \
+					&& success='true'
+			fi
 			;;
 	esac
 
-	if [[ "${rir}" ]]; then
-		build "${1}" "${1:-default}-test" 1> /dev/null
-		"${rir}" --place "build/${1:-default}-test.rbxl" --script "run-tests.lua"
-	else
+	if [[ ! "${success}" ]]; then
 		echo "A run-in-roblox installation was not found on this system"
 	fi
+}
+
+run_tests() {
+	build "${1}" "${1:-default}-test" 1> /dev/null
+	run_in_roblox "build/${1:-default}-test.rbxl" "run-tests.lua"
 }
 
 tarmac_sync() {
