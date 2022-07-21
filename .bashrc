@@ -61,5 +61,7 @@ fi
 eval "$(starship init bash)"
 
 export EDITOR='nvim'
-export PATH=$HOME/bin:$HOME/.foreman/bin:$HOME/.cargo/bin:$PATH
+export PATH=$HOME/bin:$PATH
 
+. "$HOME/.cargo/env"
+. "$HOME/.aftman/env"
