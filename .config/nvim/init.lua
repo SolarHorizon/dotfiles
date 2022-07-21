@@ -1,9 +1,6 @@
 require("plugins")
 require("lsp")
-
--- theme
-vim.cmd("colorscheme onedark")
-vim.o.termguicolors = true
+require("theme")
 
 -- formatting
 vim.o.scrolloff = 4
@@ -25,4 +22,3 @@ vim.o.relativenumber = true
 
 -- i dont know how to organize
 vim.o.errorbells = false
-
