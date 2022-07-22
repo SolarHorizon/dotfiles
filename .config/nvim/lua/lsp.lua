@@ -1,5 +1,8 @@
-local lsp = require("lspconfig")
+local cmp = require("cmp")
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local configs = require("lspconfig.configs")
+local lsp = require("lspconfig")
+local luasnip = require("luasnip")
 local null_ls = require("null-ls")
 local treesitter = require("nvim-treesitter.configs")
 
@@ -26,16 +29,6 @@ if not configs.roblox_lsp then
 	}
 end
 
-lsp.roblox_lsp.setup({
-	settings = {
-		robloxLsp = {
-			diagnostics = {
-				enable = false,
-			},
-		},
-	},
-})
-
 null_ls.setup({
 	sources = {
 		-- lua
@@ -55,6 +48,60 @@ null_ls.setup({
 			]])
 		end
 	end,
+})
+
+cmp.setup({
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	mapping = cmp.mapping.preset.insert({
+		["<C-b>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<C-e>"] = cmp.mapping.abort(),
+		["<CR>"] = cmp.mapping.confirm(),
+	}),
+	sources = cmp.config.sources({
+		{ name = "roblox_lsp" },
+		{ name = "luasnip" },
+	}, {
+		{ name = "buffer" },
+	}),
+})
+
+cmp.setup.cmdline("/", {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = {
+		{ name = "buffer" },
+	},
+})
+
+cmp.setup.cmdline(":", {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources({
+		{ name = "path" },
+	}, {
+		{ name = "cmdline" },
+	}),
+})
+
+local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+local function setup_lsp(server, config)
+	config.capabilities = capabilities
+	server.setup(config)
+end
+
+setup_lsp(lsp.roblox_lsp, {
+	settings = {
+		robloxLsp = {
+			diagnostics = {
+				enable = false,
+			},
+		},
+	},
 })
 
 treesitter.setup({
