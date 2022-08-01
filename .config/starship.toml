@@ -14,20 +14,18 @@ $character
 """
 
 [username]
-format = "[$user]($style) "
-style_user = "fg:#12a0ff"
+format = "[$user](blue) "
 show_always = true
 
 [hostname]
-format = "[@$hostname]($style) "
-style = "fg:#12a0ff"
+format = "[@$hostname](blue) "
 ssh_only = false
 
 [directory]
 truncation_length = 2
 truncate_to_repo = false
 truncation_symbol = "../"
-style = "fg:#5f636e"
+style = "dimmed italic"
 
 [character]
 success_symbol = "[λ](white)"
