@@ -9,12 +9,10 @@ COMMANDS:
 	build              Build the rojo project 
 	run                Builds the project and opens the file in Roblox Studio
 	studio             Opens a file in Roblox Studio
-	tarmac             Wraps a few Tarmac commands with some defaults
 	import             Runs the script located at remodel/import.sh (TEMPORARY)
 	refresh            Runs the script located at remodel/refresh.sh (TEMPORARY)
 	test               Executes the build command and then runs 'run-tests.lua' in Roblox Studio
-	img-sync           Alias for 'rbx tarmac sync'
-	install            Quickly download and install some commonly used programs"
+	img-sync           Syncs images to Roblox via Tarmac"
 
 BUILD_USAGE="Build the Rojo project
 
@@ -37,23 +35,6 @@ ARGS:
 		Name of the project to run. Defaults to 'default'
 	[file_name]
 		Name of the file to be written to. Defaults to the value of project_name"
-
-TARMAC_USAGE="Wraps a few Tarmac commands with some defaults
-
-USAGE:
-	tarmac [subcommand]
-
-COMMANDS:
-	sync	Runs tarmac sync with 3 retries, a retry delay of 5 seconds, and your auth cookie"
-
-INSTALL_USAGE="Quickly download and install some commonly used programs
-
-USAGE:
-	rbx install [program]
-
-ARGS:
-	foreman		Install the latest version of Foreman
-	luau		Install the latest version of Luau"
 
 platform=''
 
@@ -80,7 +61,7 @@ roblosecurity() {
 	token=''
 
 	if [[ -f ".env" ]]; then
-		token="$(awk -F: /^ROBLOSECURITY=/{print} ".env")"
+		token="$(awk -F: '/^ROBLOSECURITY=/{print}' '.env')"
 		token="${token#*ROBLOSECURITY=\"}"
 		token="${token%\"}"
 	fi
@@ -164,7 +145,7 @@ run_in_roblox() {
 }
 
 run_tests() {
-	build "${1}" "${1:-default}-test" 1> /dev/null
+	build "${1}" "${1:-default}-test"
 	run_in_roblox "build/${1:-default}-test.rbxl" "run-tests.lua"
 }
 
@@ -172,57 +153,12 @@ tarmac_sync() {
 	tarmac sync --target roblox --auth "$(roblosecurity)" --retry 3 --retry-delay 5
 }
 
-download_latest_gh_release() {
-	temp_file="${2}-download"
-
-	curl -s "https://api.github.com/repos/${1}/${2}/releases/latest" \
-	| grep "browser_download_url.*${3}.*" \
-	| cut -d '"' -f 4 \
-	| wget -O "${temp_file}" -qi -
-
-	mkdir -p "${HOME}/bin" \
-	&& unzip "${temp_file}" -d "${HOME}/bin" \
-	&& rm "${temp_file}"
-}
-
-name_for_platform() {
-	file_pattern=''
-
-	case "${platform}" in
-		linux|wsl)
-			file_pattern="${1}"
-		;;
-		windows)
-			file_pattern="${2}"
-		;;
-		mac)
-			file_pattern="${3}"
-		;;
-	esac
-
-	echo "${file_pattern}"
-}
-
-install() {
-	for program in "${@}"; do
-		case "${program}" in
-			foreman)
-				download_latest_gh_release "roblox" "foreman" "$(name_for_platform 'linux' 'win64' 'macos')" \
-				&& chmod +x "${HOME}/bin/foreman"
-				;;
-			luau)
-				download_latest_gh_release "roblox" "luau" "$(name_for_platform 'ubuntu' 'windows' 'macos')" \
-				&& chmod +x "${HOME}/bin/luau" \
-				&& chmod +x "${HOME}/bin/luau-analyze"
-				;;
-			*)
-				echo "Invalid program name: '${program}'"
-				;;
-		esac
-	done
-}
-
 case "${1}" in
+	init)
+		rojo init
+		wally init
+		aftman init
+		;;
 	build)
 		case "${2}" in
 			--help)
@@ -268,18 +204,8 @@ case "${1}" in
 	img-sync)
 		tarmac_sync
 		;;
-	install)
-		case "${2}" in
-			'')
-				echo "${INSTALL_USAGE}"
-				;;
-			*)
-				install "${@:2}"
-				;;
-		esac
-		;;
 	auth)
-		echo "$(roblosecurity)"
+		roblosecurity
 		;;
 	*)
 		echo "${RBX_USAGE}"
