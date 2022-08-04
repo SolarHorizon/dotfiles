@@ -1,11 +1,19 @@
-vim.cmd([[
-	augroup packer_user_config
-		autocmd!
-		autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-	augroup end
-]])
+local packer_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
-return require("packer").startup(function(use)
+if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
+	vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. packer_path)
+end
+
+local packer_user_config = vim.api.nvim_create_augroup("packer_user_config", { clear = true })
+
+vim.api.nvim_create_autocmd(
+	"BufWritePost",
+	{ command = "source <afile> | PackerCompile", group = packer_user_config, pattern = "init.lua" }
+)
+
+local packer = require("packer")
+
+return packer.startup(function(use)
 	use("wbthomason/packer.nvim")
 
 	use("neovim/nvim-lspconfig")
