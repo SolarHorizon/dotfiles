@@ -28,9 +28,6 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-alias ls='ls -l --color=auto'
-alias la='ls -A'
-
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -44,19 +41,20 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
 if [ -f ~/.bash_aliases ]; then
-	. ~/.bash_aliases
+	source ~/.bash_aliases
 fi
 
 # WSL
 if grep -qi Microsoft /proc/version > /dev/null 2>&1; then
-	. ~/.bash_wsl
+	source ~/.bash_wsl
 fi
 
 # starship prompt
 eval "$(starship init bash)"
 
 export EDITOR='nvim'
-export PATH=$HOME/bin:$PATH
+export PATH="$HOME/bin:$PATH"
 
-. "$HOME/.cargo/env"
-. "$HOME/.aftman/env"
+source "$HOME/.cargo/env"
+source "$HOME/.aftman/env"
+source /usr/share/nvm/init-nvm.sh
