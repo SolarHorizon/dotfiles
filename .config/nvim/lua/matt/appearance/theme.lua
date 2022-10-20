@@ -1,0 +1,52 @@
+local packer_user_config = vim.api.nvim_create_augroup("theme_config", { clear = true })
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+	command = "source <afile> | PackerCompile",
+	group = packer_user_config,
+	pattern = "theme.lua",
+})
+
+vim.o.termguicolors = true
+
+local theme = require("onedarkpro")
+
+local function _test(_hello)
+end
+
+theme.setup({
+	options = {
+		window_unfocused_color = false,
+	},
+	highlights = {
+		-- editor
+		Cursor = { bg = "${blue}" },
+		WinSeparator = { bg = "NONE", fg = "${bg_statusline}" },
+
+		-- bufferline
+		BufferLineOffsetSeparator = { bg = "NONE", fg = "${bg_statusline}" },
+		PanelHeading = { bg = "${bg}" },
+
+		-- nvim-tree
+		NvimTreeEmptyFolderIcon = { fg = "${gray}" },
+		NvimTreeFolderIcon = { fg = "${blue}" },
+		NvimTreeOpenedFolderName = { fg = "${blue}" },
+		NvimTreeWinSeparator = { bg = "NONE", fg = "${bg_statusline}" },
+
+		-- treesitter
+		["@constant.builtin"] = { fg = "${orange}" },
+		["@constructor"] = { fg = "${fg}" },
+		["@punctuation.bracket"] = { fg = "${fg}" },
+
+		-- lua
+		["@constructor.lua"] = { fg = "${fg}" },
+		["@field.lua"] = { fg = "${red}" },
+		["@function.builtin.lua"] = { fg = "${cyan}", style = "NONE" },
+		["@function.call.lua"] = { fg = "${blue}", style = "NONE" },
+		["@parameter.lua"] = { fg = "${red}", style = "italic" },
+		["@punctuation.bracket.lua"] = { fg = "${fg}" },
+		["@variable.lua"] = { fg = "${red}" },
+	},
+})
+
+theme.load()
+

@@ -6,6 +6,10 @@ local luasnip = require("luasnip")
 local null_ls = require("null-ls")
 local treesitter = require("nvim-treesitter.configs")
 
+local function isWSL()
+	return vim.fn.has("wsl") == 1
+end
+
 if not configs.roblox_lsp then
 	configs.roblox_lsp = {
 		default_config = {
@@ -39,7 +43,7 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.shellcheck,
 	},
 	on_attach = function(client)
-		if client.resolved_capabilities.document_formatting then
+		if client.server_capabilities.document_formatting then
 			vim.cmd([[
 			augroup LspFormatting
 				autocmd! * <buffer>
@@ -78,16 +82,18 @@ cmp.setup.cmdline("/", {
 	},
 })
 
-cmp.setup.cmdline(":", {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = cmp.config.sources({
-		{ name = "path" },
-	}, {
-		{ name = "cmdline" },
-	}),
-})
+if not isWSL() then
+	cmp.setup.cmdline(":", {
+		mapping = cmp.mapping.preset.cmdline(),
+		sources = cmp.config.sources({
+			{ name = "path" },
+		}, {
+			{ name = "cmdline" },
+		}),
+	})
+end
 
-local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local function setup_lsp(server, config)
 	config.capabilities = capabilities
