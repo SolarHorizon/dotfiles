@@ -14,6 +14,17 @@ notify-send() {
 }
 
 alias start='pwsh.exe /c start'
-alias explore='explorer.exe'
+alias explorer='explorer.exe'
 alias wsl='wsl.exe'
 alias wslfix='fix_wsl2_interop'
+
+export WSL="1"
+
+#
+#C="/mnt/c"
+#
+#export PATH="${PATH}:${C}/Windows"
+#
+#if [[ -x wslpath ]] && [[ -x wslvar ]]; then
+#	export PATH="${PATH}:$(wslpath $(wslvar USERPROFILE))"
+#fi
