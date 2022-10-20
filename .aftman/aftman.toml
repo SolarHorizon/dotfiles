@@ -5,8 +5,8 @@
 [tools]
 rojo = "rojo-rbx/rojo@7.2.1"
 remodel = "rojo-rbx/remodel@0.10.0"
-stylua = "johnnymorganz/stylua@0.14.1"
+stylua = "johnnymorganz/stylua@0.15.1"
 wally = "upliftgames/wally@0.3.1"
 tarmac = "jeparlefrancais/tarmac@0.7.1"
-selene = "kampfkarren/selene@0.20.0"
+selene = "kampfkarren/selene@0.22.0"
 # rojo = "rojo-rbx/rojo@6.2.0"
