@@ -1,7 +1,6 @@
 local builtin = require("telescope/builtin")
-local nnoremap = require("matt/keymap").nnoremap
 
-nnoremap("<C-p>", builtin.find_files)
+vim.keymap.set("n", "<C-p>", builtin.find_files)
+vim.keymap.set("n", "<C-g>", builtin.live_grep)
 
 require("telescope").setup()
-

@@ -25,3 +25,4 @@ vim.o.relativenumber = true
 
 -- i dont know how to organize
 vim.o.errorbells = false
+vim.g.mapleader = " "

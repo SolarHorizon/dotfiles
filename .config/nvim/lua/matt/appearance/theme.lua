@@ -1,17 +1,8 @@
-local packer_user_config = vim.api.nvim_create_augroup("theme_config", { clear = true })
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-	command = "source <afile> | PackerCompile",
-	group = packer_user_config,
-	pattern = "theme.lua",
-})
-
 vim.o.termguicolors = true
 
 local theme = require("onedarkpro")
 
-local function _test(_hello)
-end
+local function _test(_hello) end
 
 theme.setup({
 	options = {
@@ -45,8 +36,8 @@ theme.setup({
 		["@parameter.lua"] = { fg = "${red}", style = "italic" },
 		["@punctuation.bracket.lua"] = { fg = "${fg}" },
 		["@variable.lua"] = { fg = "${red}" },
+		["@method.lua"] = { fg = "${blue}", style = "NONE" },
 	},
 })
 
 theme.load()
-

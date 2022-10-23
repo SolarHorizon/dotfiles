@@ -34,8 +34,7 @@ return packer.startup(function(use)
 	use("jose-elias-alvarez/null-ls.nvim", { requires = "nvim-lua/plenary.nvim" })
 
 	use("nvim-tree/nvim-web-devicons")
-	use("nvim-tree/nvim-tree.lua", { requires = "nvim-tree/nvim-web-devicons", tag = "nightly" })
-	use("akinsho/bufferline.nvim", { requires = "nvim-tree/nvim-web-devicons", tag = "v3.*" })
+	use("nvim-tree/nvim-tree.lua", { requires = "nvim-tree/nvim-web-devicons" })
 	use("nvim-lualine/lualine.nvim", { requires = "nvim-tree/nvim-web-devicons" })
 
 	use("olimorris/onedarkpro.nvim")
