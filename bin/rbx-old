@@ -7,6 +7,7 @@ USAGE:
 
 COMMANDS:
 	build              Build the rojo project 
+	deploy             Builds all projects and deploys them to the staging environment
 	run                Builds the project and opens the file in Roblox Studio
 	studio             Opens a file in Roblox Studio
 	import             Runs the script located at remodel/import.sh (TEMPORARY)
@@ -168,6 +169,9 @@ case "${1}" in
 				build "${@:2}"
 				;;
 		esac
+		;;
+	deploy)
+		remodel --api-key "${OPENCLOUD_DEPLOY}" run remodel/scripts/deploy.lua
 		;;
 	run)
 		case "${2}" in

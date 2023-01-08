@@ -1,5 +1,2 @@
-require("matt/appearance")
-require("matt/lsp")
-require("matt/plugins")
-require("matt/telescope")
-require("matt/terminal")
+require("matt/options")
+require("matt/plugins").setup()

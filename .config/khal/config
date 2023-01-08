@@ -1,0 +1,15 @@
+[calendars]
+
+[[private]]
+path = /home/matt/.local/share/khal/calendars/private
+type = calendar
+
+[locale]
+timeformat = %I:%M %p
+dateformat = %m/%d/%Y
+longdateformat = %m/%d/%Y
+datetimeformat = %m/%d/%Y %I:%M %p
+longdatetimeformat = %m/%d/%Y %I:%M %p
+
+[default]
+default_calendar = private

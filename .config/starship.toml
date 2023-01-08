@@ -1,8 +1,5 @@
-# ~/.config/starship.toml
-
-# Use custom format
 format = """
-$username\b\
+$username\
 $hostname\
 $directory\
 $git_branch\
@@ -13,34 +10,160 @@ $line_break\
 $character
 """
 
+right_format = "${custom.rojo}$all"
+
+[character]
+success_symbol = "[λ](white)"
+error_symbol = "[λ](red)"
+
 [username]
-format = "[$user](blue) "
+format = "[$user](blue)"
 show_always = true
 
 [hostname]
 format = "[@$hostname](blue) "
 ssh_only = false
 
+[custom.rojo]
+# detect_files = ['*.project.json']
+detect_extensions = ['project.json']
+style = "bold red"
+symbol = "  "
+command = "rojo --version | cut -c 6-"
+format = "[$symbol($output )]($style)"
+
+[rust]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[aws]
+symbol = "  "
+
+[buf]
+symbol = " "
+
+[c]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[dart]
+symbol = " "
+
 [directory]
+read_only = " "
 truncation_length = 2
-truncate_to_repo = false
 truncation_symbol = "../"
 style = "dimmed italic"
 
-[character]
-success_symbol = "[λ](white)"
-error_symbol = "[λ](white)"
+[docker_context]
+symbol = " "
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
 
 [git_branch]
-format = "[\\($branch\\)]($style) "
-style = "purple"
-only_attached = true
+format = "[\\($branch(:$remote_branch)\\)]($style)"
+# format = "[$symbol$branch(:$remote_branch)]($style)"
+# symbol = " "
 
-[git_commit]
-format = "[\\($hash$tag\\)]($style) "
-style = "purple"
-tag_disabled = false
-only_detached = true
+[golang]
+symbol = " "
 
-[git_status]
-style = "red"
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = "⌘ "
+
+[hg_branch]
+symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = " "
+
+[meson]
+symbol = "喝 "
+
+[nim]
+symbol = " "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "﯑ "
+Gentoo = " "
+HardenedBSD = "ﲊ "
+Illumos = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = " "
+openSUSE = " "
+OracleLinux = " "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = " "
+Solus = "ﴱ "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = " "
+
+[package]
+format = "[$symbol$version ]($style)"
+symbol = " "
+
+[python]
+symbol = " "
+
+[rlang]
+symbol = "ﳒ "
+
+[ruby]
+symbol = " "
+
+[scala]
+symbol = " "
+
+[spack]
+symbol = "🅢 "
+

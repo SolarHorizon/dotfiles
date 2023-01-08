@@ -1,0 +1,34 @@
+#!/bin/bash
+# 2560x1080
+# 1680x720
+# 1138x480
+
+USAGE="USAGE:
+	scale-video [path] [480|720|1080]
+"
+
+scale() {
+	ffmpeg -i "${1}" -vf scale="${2}":"${3}" -preset slow -crf 18 "downscale_${1}"
+}
+
+case "${2}" in
+	240)
+		scale "${1}" 570 240
+		;;
+	360)
+		scale "${1}" 860 360
+		;;
+	480)
+		scale "${1}" 1138 480
+		;;
+	720)
+		scale "${1}" 1680 720
+		;;
+	1080)
+		scale "${1}" 2560 1080
+		;;
+	*)
+		echo "${USAGE}"
+		;;
+esac
+

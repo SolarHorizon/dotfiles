@@ -1,5 +1,4 @@
 local cmp = require("cmp")
-local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local configs = require("lspconfig.configs")
 local lsp = require("lspconfig")
 local luasnip = require("luasnip")
@@ -9,21 +8,16 @@ if not configs.roblox_lsp then
 	configs.roblox_lsp = {
 		default_config = {
 			cmd = { "roblox-lsp" },
-			filetypes = { "lua", "luau" },
+			filetypes = { "luau", "lua" },
 			root_dir = lsp.util.find_git_ancestor,
 			single_file_support = true,
 			log_level = vim.lsp.protocol.MessageType.Warning,
 			settings = {
 				robloxLsp = {
-					telemetry = {
-						enable = false,
-					},
+					diagnostics = { enable = false },
+					telemetry = { enable = false },
 				},
 			},
-		},
-		docs = {
-			package_json = "https://raw.githubusercontent.com/NightrainsRbx/RobloxLsp/master/package.json",
-			description = "https://github.com/nightrainsrbx/robloxlsp",
 		},
 	}
 end
@@ -36,8 +30,14 @@ null_ls.setup({
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.diagnostics.selene,
 
+		-- rust
+		null_ls.builtins.formatting.rustfmt,
+
 		-- sh
 		null_ls.builtins.diagnostics.shellcheck,
+
+		-- yaml
+		null_ls.builtins.diagnostics.actionlint,
 	},
 	on_attach = function(client, bufnr)
 		if client.supports_method("textDocument/formatting") then
@@ -52,12 +52,13 @@ null_ls.setup({
 	end,
 })
 
-local capabilities = cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local function setup_lsp(server, config)
+	config = config or {}
 	config.capabilities = capabilities
 
-	function config.on_attach()
+	function config.on_attach(_client, _bufnr)
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0 })
 		vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { buffer = 0 })
@@ -65,21 +66,15 @@ local function setup_lsp(server, config)
 		vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { buffer = 0 })
 		vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, { buffer = 0 })
 		vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev, { buffer = 0 })
+		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = 0 })
 		vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>", { buffer = 0 })
 	end
 
 	server.setup(config)
 end
 
-setup_lsp(lsp.roblox_lsp, {
-	settings = {
-		robloxLsp = {
-			diagnostics = {
-				enable = false,
-			},
-		},
-	},
-})
+setup_lsp(lsp.rust_analyzer)
+setup_lsp(lsp.roblox_lsp)
 
 cmp.setup({
 	snippet = {
@@ -95,7 +90,7 @@ cmp.setup({
 		["<CR>"] = cmp.mapping.confirm({ select = true }),
 	}),
 	sources = cmp.config.sources({
-		{ name = "roblox_lsp" },
+		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
 	}, {
 		{ name = "buffer" },

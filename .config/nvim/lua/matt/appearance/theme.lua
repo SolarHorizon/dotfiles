@@ -2,8 +2,6 @@ vim.o.termguicolors = true
 
 local theme = require("onedarkpro")
 
-local function _test(_hello) end
-
 theme.setup({
 	options = {
 		window_unfocused_color = false,
@@ -29,6 +27,7 @@ theme.setup({
 		["@punctuation.bracket"] = { fg = "${fg}" },
 
 		-- lua
+		["@keyword.operator"] = { fg = "${purple}" },
 		["@constructor.lua"] = { fg = "${fg}" },
 		["@field.lua"] = { fg = "${red}" },
 		["@function.builtin.lua"] = { fg = "${cyan}", style = "NONE" },

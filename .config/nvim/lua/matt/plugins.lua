@@ -1,41 +1,79 @@
+local plugins = {}
+
 local packer_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+local first_time = false
 
 if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
+	first_time = true
 	vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. packer_path)
+	vim.cmd("packadd packer.nvim")
 end
-
-local packer_user_config = vim.api.nvim_create_augroup("packer_user_config", { clear = true })
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-	command = "source <afile> | PackerCompile",
-	group = packer_user_config,
-	pattern = "init.lua",
-})
 
 local packer = require("packer")
 
-return packer.startup(function(use)
-	use("wbthomason/packer.nvim")
+local augroup = vim.api.nvim_create_augroup("PackerUserConfig", { clear = true })
 
-	use("neovim/nvim-lspconfig")
-	use("nvim-lua/plenary.nvim")
-	use("nvim-telescope/telescope.nvim")
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = augroup,
+	pattern = vim.fn.expand("~") .. "/.config/nvim/lua/matt/plugins.lua",
+	callback = function()
+		plugins.setup()
+	end,
+})
 
-	use("hrsh7th/cmp-buffer")
-	use("hrsh7th/cmp-cmdline")
-	use("hrsh7th/cmp-path")
-	use("hrsh7th/nvim-cmp")
-	use("hrsh7th/cmp-nvim-lsp")
-	use("L3MON4D3/LuaSnip")
-	use("saadparwaiz1/cmp_luasnip")
+function plugins.setup()
+	return packer.startup(function(use)
+		use("wbthomason/packer.nvim")
 
-	use("nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" })
-	use("nvim-treesitter/playground", { requires = "nvim-treesitter/nvim-treesitter" })
-	use("jose-elias-alvarez/null-ls.nvim", { requires = "nvim-lua/plenary.nvim" })
+		use({
+			"nvim-telescope/telescope.nvim",
+			requires = {
+				"nvim-lua/plenary.nvim",
+			},
+		})
 
-	use("nvim-tree/nvim-web-devicons")
-	use("nvim-tree/nvim-tree.lua", { requires = "nvim-tree/nvim-web-devicons" })
-	use("nvim-lualine/lualine.nvim", { requires = "nvim-tree/nvim-web-devicons" })
+		use({
+			"ThePrimeagen/harpoon",
+			requires = {
+				"nvim-lua/plenary.nvim",
+			},
+		})
 
-	use("olimorris/onedarkpro.nvim")
-end)
+		use({ "neovim/nvim-lspconfig", requires = {
+			"jose-elias-alvarez/null-ls.nvim",
+		} })
+
+		use({
+			"hrsh7th/nvim-cmp",
+			requires = {
+				"L3MON4D3/LuaSnip",
+				"hrsh7th/cmp-buffer",
+				"hrsh7th/cmp-cmdline",
+				"hrsh7th/cmp-nvim-lsp",
+				"hrsh7th/cmp-path",
+				"saadparwaiz1/cmp_luasnip",
+			},
+		})
+
+		use({
+			"nvim-treesitter/nvim-treesitter",
+			run = ":TSUpdate",
+			requires = {
+				"nvim-treesitter/playground",
+			},
+		})
+
+		use("nvim-tree/nvim-web-devicons")
+		use("nvim-lualine/lualine.nvim")
+		use("nvim-tree/nvim-tree.lua")
+		use("lukas-reineke/indent-blankline.nvim")
+		use("folke/tokyonight.nvim")
+		-- use("olimorris/onedarkpro.nvim")
+
+		if first_time then
+			packer.sync()
+		end
+	end)
+end
+
+return plugins

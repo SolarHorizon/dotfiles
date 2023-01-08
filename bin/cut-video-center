@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ffmpeg -i "${1}" \
+	-vf "select='not(between(t,${2},${3}))', setpts=N/FRAME_RATE/TB" \
+	-af "aselect='not(between(t,${2},${3}))', asetpts=N/SR/TB" \
+	"trim_${1}"
