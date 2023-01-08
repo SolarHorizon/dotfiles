@@ -1,0 +1,18 @@
+# stop dumping in my home
+export LESSHISTFILE=-
+export ZSH_COMPDUMP="${HOME}/.cache/zcompdump-${HOST}"
+export ZDOTDIR="${HOME}/.config/zsh"
+
+# default apps
+export EDITOR="nvim"
+export OPENER="wslview"
+export TERM="screen-256color"
+
+# environment variables
+export ROBLOX_STUDIO_PATH="/mnt/c/Users/matt-/AppData/Local/Roblox"
+export NEXT_TELEMETRY_DISABLED=1
+#
+# path
+path=("${HOME}/bin" "${HOME}/.local/bin" "${HOME}/.cargo/bin" "${HOME}/go/bin" "${HOME}/.aftman/bin" "${HOME}/.local/lib/npm/bin" $path)
+export PATH
+
