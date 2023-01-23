@@ -10,6 +10,14 @@ parser_configs.luau = {
 	},
 }
 
+parser_configs.just = {
+	install_info = {
+		url = "https://github.com/IndianBoy42/tree-sitter-just",
+		files = { "src/parser.c", "src/scanner.cc" },
+		branch = "main",
+	},
+}
+
 require("nvim-treesitter.configs").setup({
 	highlight = {
 		enable = true,

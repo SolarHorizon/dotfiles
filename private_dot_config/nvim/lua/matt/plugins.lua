@@ -63,12 +63,13 @@ function plugins.setup()
 			},
 		})
 
+		use("IndianBoy42/tree-sitter-just")
+
 		use("nvim-tree/nvim-web-devicons")
 		use("nvim-lualine/lualine.nvim")
 		use("nvim-tree/nvim-tree.lua")
 		use("lukas-reineke/indent-blankline.nvim")
 		use("folke/tokyonight.nvim")
-		-- use("olimorris/onedarkpro.nvim")
 
 		if first_time then
 			packer.sync()

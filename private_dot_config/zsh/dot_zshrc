@@ -11,6 +11,8 @@ alias vim='nvim'
 alias rrc='source /home/matt/.zshrc'
 alias erc='vi /home/matt/.zshrc'
 
+alias shutdown='wsl.exe --shutdown'
+
 # completion
 autoload -Uz compinit && compinit
 

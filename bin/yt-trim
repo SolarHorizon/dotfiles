@@ -1,8 +1,0 @@
-#!/bin/bash
-NAME="${4}"
-TMP="/tmp/yt-trim-vid-$(date +%s)"
-
-yt-dlp -o "${TMP}" "${1}" \
-&& ffmpeg -i "${TMP}.webm" -ss "${2}" -to "${3}" -codec:v copy -codec:a copy "/mnt/c/Users/matt-/Desktop/${NAME}.webm"
-
-rm "${TMP}*"

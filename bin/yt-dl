@@ -1,2 +1,0 @@
-#!/bin/bash
-yt-dlp -o "/mnt/c/Users/matt-/Desktop/${2:-yt-download}.webm" "${1}"
