@@ -12,6 +12,7 @@ alias rrc='source /home/matt/.zshrc'
 alias erc='vi /home/matt/.zshrc'
 
 alias shutdown='wsl.exe --shutdown'
+alias start='powershell.exe -c start'
 
 # completion
 autoload -Uz compinit && compinit
