@@ -25,24 +25,6 @@ return {
 				end
 
 				vim.fn.system({ "update-luau-types" })
-
-				--local gh = "https://raw.githubusercontent.com"
-
-				--vim.fn.system({
-				--	"curl",
-				--	gh
-				--		.. "/JohnnyMorganz/luau-lsp/master/scripts/globalTypes.d.lua",
-				--	"--output",
-				--	luau_path .. "/globalTypes.d.lua",
-				--})
-
-				--vim.fn.system({
-				--	"curl",
-				--	gh
-				--		.. "/MaximumADHD/Roblox-Client-Tracker/roblox/api-docs/en-us.json",
-				--	"--output",
-				--	luau_path .. "/docs.json",
-				--})
 			end)
 		)
 
@@ -112,15 +94,12 @@ return {
 			function(server_name)
 				setup(server_name)
 			end,
+			-- probably should extract all of this stuff into its own module
 			["luau_lsp"] = function()
 				local augroup =
 					vim.api.nvim_create_augroup("luau-lsp", { clear = true })
 
 				local function generate_sourcemap()
-					vim.notify("regenerating sourcemap", "info", {
-						title = "luau-lsp",
-					})
-
 					vim.fn.system({
 						"rojo",
 						"sourcemap",
@@ -131,14 +110,44 @@ return {
 
 				generate_sourcemap()
 
+				local definitions = { "roblox", "testez" }
+
+				local flags = {
+					LuauInterpolatedStringBaseSupport = true,
+				}
+
+				local cmd = {
+					"luau-lsp",
+					"lsp",
+					"--docs=" .. luau_path .. "/docs.json",
+				}
+
+				for name, value in pairs(flags) do
+					table.insert(
+						cmd,
+						#cmd + 1,
+						string.format(
+							"--flag:%s=%s",
+							tostring(name),
+							tostring(value)
+						)
+					)
+				end
+
+				for _, file in ipairs(definitions) do
+					table.insert(
+						cmd,
+						#cmd + 1,
+						string.format(
+							"--definitions=%s/%s.d.lua",
+							luau_path,
+							file
+						)
+					)
+				end
+
 				setup("luau_lsp", {
-					cmd = {
-						"luau-lsp",
-						"lsp",
-						"--definitions=" .. luau_path .. "/roblox.d.lua",
-						"--definitions=" .. luau_path .. "/testez.d.lua",
-						"--docs=" .. luau_path .. "/docs.json",
-					},
+					cmd = cmd,
 					on_attach = function(_client, _bufnr)
 						-- replace with something more robust later
 						vim.api.nvim_create_autocmd("BufWritePost", {
