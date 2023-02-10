@@ -24,7 +24,7 @@ return {
 					return
 				end
 
-				vim.fn.system({ "update-luau-lsp" })
+				vim.fn.system({ "update-luau-types" })
 
 				--local gh = "https://raw.githubusercontent.com"
 
