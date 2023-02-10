@@ -1,0 +1,12 @@
+#!/bin/sh
+
+LSP_PATH="${1:-${HOME}/.local/share/luau-lsp}"
+
+TYPES="https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/master/scripts/globalTypes.d.lua"
+DOCS="https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/api-docs/en-us.json"
+
+curl "${DOCS}" --output "${LSP_PATH}/docs.json" \
+	&& curl "${TYPES}" --output "${LSP_PATH}/globalTypes.d.lua"
+
+[ -f "${LSP_PATH}/testez.d.lua" ] && cat "${LSP_PATH}/testez.d.lua" \
+	>> "${LSP_PATH}/globalTypes.d.lua"
