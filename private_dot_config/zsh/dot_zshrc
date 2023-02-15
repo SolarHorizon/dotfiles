@@ -8,11 +8,13 @@ alias ll='ls -l'
 alias vi='nvim'
 alias vim='nvim'
 
-alias rrc='source /home/matt/.zshrc'
-alias erc='vi /home/matt/.zshrc'
+alias rrc="source ${ZDOTDIR}/.zshrc"
+alias erc="chezmoi edit ${ZDOTDIR}/.zshrc"
 
 alias shutdown='wsl.exe --shutdown'
 alias start='powershell.exe -c start'
+
+alias rbxa="luau-lsp analyze --definitions=${HOME}/.local/share/luau-lsp/roblox.d.lua --definitions=${HOME}/.local/share/luau-lsp/testez.d.lua --sourcemap=./sourcemap.json"
 
 # completion
 autoload -Uz compinit && compinit

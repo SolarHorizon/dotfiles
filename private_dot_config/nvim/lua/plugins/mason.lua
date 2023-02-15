@@ -71,6 +71,9 @@ return {
 				"<cmd>Telescope diagnostics<cr>",
 				{ buffer = 0 }
 			)
+			vim.keymap.set("n", "<leader>e", function()
+				vim.diagnostic.open_float(0, { scope = "line" })
+			end, { buffer = 0 })
 		end
 
 		local function setup(name, config)
@@ -99,13 +102,17 @@ return {
 				local augroup =
 					vim.api.nvim_create_augroup("luau-lsp", { clear = true })
 
-				local function generate_sourcemap()
+				local function generate_sourcemap(client)
 					vim.fn.system({
 						"rojo",
 						"sourcemap",
 						"--output",
 						"./sourcemap.json",
 					})
+
+					if client then
+						client.notify("regenerating sourcemap")
+					end
 				end
 
 				generate_sourcemap()
@@ -148,11 +155,13 @@ return {
 
 				setup("luau_lsp", {
 					cmd = cmd,
-					on_attach = function(_client, _bufnr)
+					on_attach = function(client, _bufnr)
 						-- replace with something more robust later
 						vim.api.nvim_create_autocmd("BufWritePost", {
 							group = augroup,
-							callback = generate_sourcemap,
+							callback = function()
+								generate_sourcemap(client)
+							end,
 						})
 					end,
 				})
