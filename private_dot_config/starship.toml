@@ -28,7 +28,7 @@ ssh_only = false
 # detect_files = ['*.project.json']
 detect_extensions = ['project.json']
 style = "bold red"
-symbol = "  "
+symbol = "󱊈 "
 command = "rojo --version | cut -c 6-"
 format = "[$symbol($output )]($style)"
 
