@@ -11,8 +11,8 @@ export TERM="screen-256color"
 # environment variables
 export ROBLOX_STUDIO_PATH="/mnt/c/Users/matt-/AppData/Local/Roblox"
 export NEXT_TELEMETRY_DISABLED=1
-#
+
 # path
-path=("${HOME}/bin" "${HOME}/.local/bin" "${HOME}/.cargo/bin" "${HOME}/go/bin" "${HOME}/.aftman/bin" "${HOME}/.local/lib/npm/bin" $path)
+path=("${HOME}/bin" "${HOME}/.local/bin" "${HOME}/.cargo/bin" "${HOME}/go/bin" "${HOME}/.local/lib/npm/bin" $path "${HOME}/.aftman/bin")
 export PATH
 
