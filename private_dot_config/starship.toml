@@ -10,7 +10,7 @@ $line_break\
 $character
 """
 
-right_format = "${custom.rojo}$all"
+right_format = "${custom.wally}${custom.rojo}$all"
 
 [character]
 success_symbol = "[λ](white)"
@@ -25,12 +25,18 @@ format = "[@$hostname](blue) "
 ssh_only = false
 
 [custom.rojo]
-# detect_files = ['*.project.json']
 detect_extensions = ['project.json']
 style = "bold red"
 symbol = "󱊈 "
 command = "rojo --version | cut -c 6-"
-format = "[$symbol($output )]($style)"
+format = "[$symbol(v$output )]($style)"
+
+[custom.wally]
+detect_files = ['wally.toml']
+style = "208 bold"
+symbol = ""
+command = "wally manifest-to-json | get-wally-version"
+format = "[$symbol v$output ]($style)"
 
 [rust]
 format = "[$symbol($version )]($style)"
