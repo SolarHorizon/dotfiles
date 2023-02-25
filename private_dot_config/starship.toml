@@ -27,16 +27,16 @@ ssh_only = false
 [custom.rojo]
 detect_extensions = ['project.json']
 style = "bold red"
-symbol = "󱊈 "
+symbol = " "
 command = "rojo --version | cut -c 6-"
-format = "[$symbol(v$output )]($style)"
+format = "[$symbol($output )]($style)"
 
 [custom.wally]
 detect_files = ['wally.toml']
 style = "208 bold"
-symbol = ""
+symbol = " "
 command = "wally manifest-to-json | get-wally-version"
-format = "[$symbol v$output ]($style)"
+format = "[$symbol($output )]($style)"
 
 [rust]
 format = "[$symbol($version )]($style)"
