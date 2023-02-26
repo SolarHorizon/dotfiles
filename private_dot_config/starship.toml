@@ -10,7 +10,7 @@ $line_break\
 $character
 """
 
-right_format = "${custom.wally}${custom.rojo}$all"
+right_format = "$all${custom.wally}${custom.rojo}"
 
 [character]
 success_symbol = "[λ](white)"
@@ -46,12 +46,15 @@ symbol = " "
 symbol = "  "
 
 [buf]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [c]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [conda]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [dart]
@@ -64,12 +67,15 @@ truncation_symbol = "../"
 style = "dimmed italic"
 
 [docker_context]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [elixir]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [elm]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [git_branch]
@@ -78,15 +84,19 @@ format = "[\\($branch(:$remote_branch)\\)]($style)"
 # symbol = " "
 
 [golang]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [guix_shell]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [haskell]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [haxe]
+format = "[$symbol($version )]($style)"
 symbol = "⌘ "
 
 [hg_branch]
@@ -94,26 +104,33 @@ symbol = " "
 
 [java]
 symbol = " "
+format = "[$symbol($version )]($style)"
 
 [julia]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [lua]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [memory_usage]
 symbol = " "
 
 [meson]
+format = "[$symbol($version )]($style)"
 symbol = "喝 "
 
 [nim]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [nix_shell]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [nodejs]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [os.symbols]
@@ -159,17 +176,22 @@ format = "[$symbol$version ]($style)"
 symbol = " "
 
 [python]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [rlang]
+format = "[$symbol($version )]($style)"
 symbol = "ﳒ "
 
 [ruby]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [scala]
+format = "[$symbol($version )]($style)"
 symbol = " "
 
 [spack]
+format = "[$symbol($version )]($style)"
 symbol = "🅢 "
 
