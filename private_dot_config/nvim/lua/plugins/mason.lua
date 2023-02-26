@@ -110,13 +110,6 @@ return {
 						"./sourcemap.json",
 					})
 
-					vim.fn.system({
-						"wally-package-types",
-						"--sourcemap",
-						"./sourcemap.json",
-						"./Packages/",
-					})
-
 					if client then
 						client.notify("regenerating sourcemap")
 					end
