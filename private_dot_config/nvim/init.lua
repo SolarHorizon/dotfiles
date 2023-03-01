@@ -13,6 +13,11 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+-- use chezmoi to add this dynamically later
+pcall(function()
+	vim.opt.rtp:prepend("/usr/share/vim/vimfiles")
+end)
+
 local terminal_augroup =
 	vim.api.nvim_create_augroup("UserNvimTerminal", { clear = true })
 
