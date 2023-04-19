@@ -28,6 +28,10 @@ return {
 				-- ts & js
 				null_ls.builtins.formatting.prettier.with(node_modules),
 				null_ls.builtins.diagnostics.eslint.with(node_modules),
+
+				-- english..?
+				-- null_ls.builtins.diagnostics.cspell,
+				-- null_ls.builtins.code_actions.cspell,
 			},
 			on_attach = function(client, bufnr)
 				if client.supports_method("textDocument/formatting") then

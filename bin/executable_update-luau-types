@@ -2,12 +2,24 @@
 
 LSP_PATH="${1:-${HOME}/.local/share/luau-lsp}"
 
-TYPES="https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/master/scripts/globalTypes.d.lua"
-DOCS="https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/api-docs/en-us.json"
+# TYPES="https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/master/scripts/globalTypes.d.lua"
+# DOCS="https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/api-docs/en-us.json"
 TESTEZ="https://gist.githubusercontent.com/SolarHorizon/0f9fbe1e9fb830be9a705e351b1d03de/raw/f444b056c4ef66d0012d27ec4bb91b781872fd3a/testez.d.luau"
 
-[ ! -f "${LSP_PATH}" ] && mkdir -p "${LSP_PATH}"
+[ ! -f "${LSP_PATH}/types" ] && mkdir -p "${LSP_PATH}/types"
+[ ! -f "${LSP_PATH}/docs" ] && mkdir -p "${LSP_PATH}/docs"
 
-curl "${DOCS}" --output "${LSP_PATH}/docs.json" \
-	&& curl "${TYPES}" --output "${LSP_PATH}/roblox.d.lua" \
-	&& curl "${TESTEZ}" --output "${LSP_PATH}/testez.d.lua"
+move() {
+	mv "${1}.d.luau" "${LSP_PATH}/types/${1}.d.luau" \
+		&& mv "${1}.json" "${LSP_PATH}/docs/${1}.json"
+}
+
+# luau-lsp.nvim handles this now
+# curl "${DOCS}" --output "${LSP_PATH}/docs/roblox.json" \
+	# && curl "${TYPES}" --output "${LSP_PATH}/types/roblox.d.lua"
+
+curl "${TESTEZ}" --output "${LSP_PATH}/types/testez.d.luau"
+
+lune --generate-luau-types --generate-docs-file \
+	&& mv "luneTypes.d.luau" "${LSP_PATH}/types/lune.d.luau" \
+	&& mv "luneDocs.json" "${LSP_PATH}/docs/lune.json"

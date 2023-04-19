@@ -31,10 +31,7 @@ vim.keymap.set(
 	"n",
 	"gx",
 	":execute '!pwsh.exe -c Start-Process ' . shellescape(expand('<cfile>'), 1)<CR>"
-	--":silent execute '!$OPENER ' . shellescape(expand('<cfile>'), 1)<CR>"
 )
-
---test('gx', [[:execute '!open ' . shellescape(expand('<cfile>'), 1)<CR>]])
 
 vim.o.scrolloff = 4
 vim.o.tabstop = 4

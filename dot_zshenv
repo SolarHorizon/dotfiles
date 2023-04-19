@@ -5,7 +5,7 @@ export ZDOTDIR="${HOME}/.config/zsh"
 
 # default apps
 export EDITOR="nvim"
-export OPENER="wslview"
+export OPENER="xdg-open"
 export TERM="screen-256color"
 
 # environment variables

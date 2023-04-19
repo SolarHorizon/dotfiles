@@ -28,9 +28,7 @@ return {
 		vim.keymap.set("n", "<leader>4", nav_file(4))
 		vim.keymap.set("n", "<leader>5", nav_file(5))
 
-		vim.keymap.set("n", "<leader>e", terminal(1))
-		vim.keymap.set("n", "<leader>t", terminal(2))
-		--		vim.keymap.set("n", "<leader>t", terminal(3))
+		vim.keymap.set("n", "<leader>t", terminal(1))
 	end,
 	dependencies = {
 		"nvim-lua/plenary.nvim",

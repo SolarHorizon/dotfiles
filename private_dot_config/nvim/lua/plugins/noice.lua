@@ -1,5 +1,6 @@
 return {
 	"folke/noice.nvim",
+	tag = "v1.10.2",
 	-- enabled = false,
 	opts = {
 		cmdline = {
